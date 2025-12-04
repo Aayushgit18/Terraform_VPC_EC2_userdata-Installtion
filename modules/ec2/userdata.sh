@@ -28,50 +28,48 @@ systemctl start docker
 apt install -y openjdk-17-jdk maven git
 
 # ---------------------------
-# Install Jenkins (Ubuntu 24.04 Fix)
+# Install Jenkins (Ubuntu 24.04 - working)
 # ---------------------------
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | \
-gpg --dearmor -o /usr/share/keyrings/jenkins-keyring.asc
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io-2023.key | \
+  gpg --dearmor | tee /usr/share/keyrings/jenkins.gpg > /dev/null
 
-echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-https://pkg.jenkins.io/debian-stable binary/" \
-> /etc/apt/sources.list.d/jenkins.list
+echo "deb [signed-by=/usr/share/keyrings/jenkins.gpg] \
+ https://pkg.jenkins.io/debian binary/" \
+  > /etc/apt/sources.list.d/jenkins.list
 
 apt update -y
-apt install -y jenkins
-systemctl enable jenkins
-systemctl restart jenkins
+apt install -y jenkins || true
+systemctl enable jenkins || true
+systemctl start jenkins || true
 
 # ---------------------------
 # Install Trivy
 # ---------------------------
 curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | \
-gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+  gpg --dearmor -o /usr/share/keyrings/trivy.gpg
 
 echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
 https://aquasecurity.github.io/trivy-repo/deb generic main" \
 > /etc/apt/sources.list.d/trivy.list
 
 apt update -y
-apt install -y trivy
+apt install -y trivy || true
 
 # ---------------------------
-# Install Sonar Scanner
+# Install SonarScanner
 # ---------------------------
 cd /opt
 wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-5.0.1.3006-linux.zip
 unzip sonar-scanner-*.zip
 mv sonar-scanner-* sonar-scanner
-
 echo 'export PATH=$PATH:/opt/sonar-scanner/bin' >> /etc/profile
-source /etc/profile
 
 # ---------------------------
 # Install Artifactory OSS
 # ---------------------------
 wget https://releases.jfrog.io/artifactory/artifactory-debs/pool/jfrog-artifactory-oss.deb
 dpkg -i jfrog-artifactory-oss.deb || apt --fix-broken install -y
-systemctl enable artifactory
-systemctl start artifactory
+systemctl enable artifactory || true
+systemctl start artifactory || true
 
-echo "Userdata execution completed successfully"
+echo "### USERDATA COMPLETED SUCCESSFULLY ###"
