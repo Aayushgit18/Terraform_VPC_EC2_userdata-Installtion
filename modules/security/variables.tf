@@ -6,18 +6,8 @@ variable "tags" {
   type = map(string)
 }
 
-variable "ssh_cidr" {
-  type = string
-}
-
-variable "enable_http" {
-  type = bool
-}
-
-variable "enable_https" {
-  type = bool
-}
-
-variable "enable_jenkins" {
-  type = bool
+# List of allowed inbound ports
+variable "allowed_ports" {
+  type    = list(number)
+  default = [22, 80, 443, 8080, 8081, 8082, 9000]
 }
