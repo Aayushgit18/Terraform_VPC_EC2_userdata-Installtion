@@ -1,9 +1,35 @@
-variable "instance_count" { type=number }
-variable "ami" { type=string }
-variable "instance_type" { type=string }
-variable "key_name" { type=string }
-variable "subnet_id" { type=string }
-variable "sg_id" { type=string }
-variable "ebs_size" { type=number }
-variable "associate_public_ip" { type=bool }
-variable "tags" { type=map(string) }
+variable "instance_count" {
+  type = number
+}
+
+variable "ami" {
+  type = string
+}
+
+variable "instance_type" {
+  type = string
+}
+
+variable "key_name" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "sg_id" {
+  type = string
+}
+
+variable "ebs_size" {
+  type = number
+}
+
+variable "associate_public_ip" {
+  type = bool
+}
+
+variable "tags" {
+  type = map(string)
+}
